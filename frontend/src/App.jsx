@@ -26,6 +26,9 @@ function App() {
     const [isGenerating, setIsGenerating] = useState(false)
     const [error, setError] = useState(null)
 
+    // 手机端3D预览弹窗状态
+    const [showMobileViewer, setShowMobileViewer] = useState(false)
+
     // 清除画布
     const handleClear = useCallback(() => {
         if (canvasRef) {
@@ -80,6 +83,11 @@ function App() {
             setModelUrl(result.modelUrl)
             setStlUrl(result.stlUrl)
             setTaskId(result.taskId)
+
+            // 在手机端自动打开3D预览弹窗
+            if (window.innerWidth <= 768) {
+                setShowMobileViewer(true)
+            }
         } catch (err) {
             console.error('生成3D模型失败:', err)
             setError(err.message || '生成失败，请重试')
@@ -262,6 +270,48 @@ function App() {
                     )}
                 </section>
             </main>
+
+            {/* 手机端3D预览弹窗 */}
+            {showMobileViewer && modelUrl && (
+                <div className="mobile-viewer-modal">
+                    <div className="mobile-viewer-header">
+                        <h3>🎲 3D模型预览</h3>
+                        <button
+                            className="mobile-viewer-close"
+                            onClick={() => setShowMobileViewer(false)}
+                        >
+                            ✕
+                        </button>
+                    </div>
+                    <div className="mobile-viewer-content">
+                        <Model3DViewer
+                            modelUrl={modelUrl}
+                            isLoading={false}
+                        />
+                    </div>
+                    <div className="mobile-viewer-actions">
+                        <button
+                            className="btn btn-primary"
+                            onClick={handleDownload}
+                        >
+                            📥 下载GLB
+                        </button>
+                        <button
+                            className="btn btn-secondary"
+                            onClick={handleDownloadSTL}
+                            disabled={!taskId}
+                        >
+                            🖨️ 下载STL
+                        </button>
+                        <button
+                            className="btn btn-outline"
+                            onClick={() => setShowMobileViewer(false)}
+                        >
+                            继续绘画
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }
