@@ -1,0 +1,29 @@
+# 依赖目录
+node_modules/
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# 构建输出
+dist/
+build/
+*.egg-info/
+
+# 模型输出
+outputs/
+
+# IDE
+.vscode/
+.idea/
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 日志
+*.log
+
+# 环境变量
+.env
+.env.local
